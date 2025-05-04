@@ -7,32 +7,34 @@ import { join } from "node:path";
 import { Configuration } from "@tsed/di";
 import { application } from "@tsed/platform-http";
 
+import { MysqlDatasourceProvider } from "./config/DataSources/MysqlDatasource.js";
 import { config } from "./config/index.js";
 import * as rest from "./controllers/rest/index.js";
 
 @Configuration({
-  ...config,
-  acceptMimes: ["application/json"],
-  httpPort: process.env.PORT || 8081,
-  httpsPort: false, // CHANGE
-  mount: {
-    "/rest": [...Object.values(rest)]
-  },
-  middlewares: [
-    "cors",
-    "cookie-parser",
-    "compression",
-    "method-override",
-    "json-parser",
-    { use: "urlencoded-parser", options: { extended: true } }
-  ],
-  views: {
-    root: join(process.cwd(), "../views"),
-    extensions: {
-      ejs: "ejs"
-    }
-  }
+	...config,
+	acceptMimes: ["application/json"],
+	httpPort: process.env.PORT || 8081,
+	httpsPort: false, // CHANGE
+	mount: {
+		"/rest": [...Object.values(rest)]
+	},
+	inject: [MysqlDatasourceProvider],
+	middlewares: [
+		"cors",
+		"cookie-parser",
+		"compression",
+		"method-override",
+		"json-parser",
+		{ use: "urlencoded-parser", options: { extended: true } }
+	],
+	views: {
+		root: join(process.cwd(), "../views"),
+		extensions: {
+			ejs: "ejs"
+		}
+	}
 })
 export class Server {
-  protected app = application();
+	protected app = application();
 }

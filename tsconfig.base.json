@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
-    "module": "NodeNext",
-    "target": "ESNext",
+    "module": "Node16",
+    "target": "es2022",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "node16",
     "downlevelIteration": false,
     "isolatedModules": false,
     "suppressImplicitAnyIndexErrors": false,
