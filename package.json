@@ -11,7 +11,7 @@
     "test:lint": "eslint",
     "test:lint:fix": "eslint --fix",
     "prettier": "prettier '**/*.{json,md,yml,yaml}' --write",
-    "prepare": "is-ci || husky install"
+    "prepare": "is-ci || husky"
   },
   "dependencies": {
     "@swc-node/register": "^1.10.10",
@@ -38,7 +38,7 @@
     "@tsed/platform-views": "^8.8.2",
     "@tsed/schema": "^8.8.2",
     "ajv": "^8.17.1",
-    "body-parser": "^2.2.0",
+    "body-parser": "^1.19.0",
     "compression": "^1.8.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
