@@ -2,12 +2,15 @@
 import { registerProvider } from "@tsed/di";
 import { Logger } from "@tsed/logger";
 import dotenv from "dotenv";
-import { join } from "path";
+import { dirname } from "path";
 import { DataSource } from "typeorm";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
 export const MYSQL_DATA_SOURCE = Symbol.for("MysqlDataSource");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 registerProvider<DataSource>({
 	provide: MYSQL_DATA_SOURCE,
@@ -18,7 +21,7 @@ registerProvider<DataSource>({
 
 		const MysqlDataSource = new DataSource({
 			type: "mysql",
-			entities: process.env.NODE_ENV === "production" ? [join(__dirname, "../../models/**/*.js")] : ["src/models/*.ts"],
+			entities: [`${__dirname}/../../models/*.js`],
 			host: process.env.MYSQL_HOST!,
 			port: Number.parseInt(process.env.MYSQL_PORT!),
 			username: process.env.MYSQL_USER!,
