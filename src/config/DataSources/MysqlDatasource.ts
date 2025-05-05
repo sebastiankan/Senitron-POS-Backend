@@ -19,15 +19,14 @@ registerProvider<DataSource>({
 		const __filename = fileURLToPath(import.meta.url);
 		const __dirname = dirname(__filename);
 
-		// Figure out correct base folder
-		const baseFolder = process.env.NODE_ENV === "production" ? "dist" : "src";
-		// Now compute final path correctly
-		const entitiesPath = path.join(__dirname, "..", "..", baseFolder, "models", "*.js");
-		console.log("Entities path (resolved):", entitiesPath);
+		console.log("Entities path (resolved):", path.resolve(__dirname, "../../../dist/models/*.js"));
 
 		const MysqlDataSource = new DataSource({
 			type: "mysql",
-			entities: [entitiesPath],
+			entities: [
+				// 👇 This is what fixes your issue:
+				path.resolve(__dirname, "../../../dist/models/*.js")
+			],
 			host: process.env.MYSQL_HOST!,
 			port: Number.parseInt(process.env.MYSQL_PORT!),
 			username: process.env.MYSQL_USER!,
