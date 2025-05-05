@@ -17,17 +17,6 @@
 
 ARG NODE_VERSION=20.11.0
 
-FROM node:${NODE_VERSION}-alpine AS build
-WORKDIR /opt
-
-COPY package.json package-lock.json tsconfig.json tsconfig.base.json tsconfig.node.json .barrels.json .swcrc ./
-
-RUN npm ci
-
-COPY ./src ./src
-
-RUN npm run build
-
 FROM node:${NODE_VERSION}-alpine AS runtime
 ENV WORKDIR /opt
 WORKDIR $WORKDIR
@@ -35,11 +24,9 @@ WORKDIR $WORKDIR
 RUN apk update && apk add build-base git curl
 RUN npm install -g pm2
 
-COPY --from=build /opt .
+COPY --from=build /opt .   # Only copy from build, DO NOT copy local again
 
 RUN npm ci --omit=dev --ignore-scripts
-
-COPY . .
 
 EXPOSE 8081
 ENV PORT 8081
