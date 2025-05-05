@@ -20,7 +20,7 @@ registerProvider<DataSource>({
 			type: "mysql",
 			entities:
 				process.env.NODE_ENV === "production"
-					? [path.resolve(__dirname, "../models/**/*.js")]
+					? [path.join(__dirname, "../models/**/*.js")]
 					: [path.resolve(__dirname, "../models/**/*.ts")],
 			host: process.env.MYSQL_HOST!,
 			port: Number.parseInt(process.env.MYSQL_PORT!),
