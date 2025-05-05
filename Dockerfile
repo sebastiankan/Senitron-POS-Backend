@@ -19,7 +19,7 @@ ARG NODE_VERSION=20.11.0
 
 ### Stage 1: Build
 FROM node:${NODE_VERSION}-alpine AS build
-WORKDIR /opt
+WORKDIR /src
 
 COPY package.json package-lock.json tsconfig.json tsconfig.base.json tsconfig.node.json .barrels.json .swcrc ./
 RUN npm ci
@@ -30,13 +30,13 @@ RUN npm run build
 
 ### Stage 2: Runtime
 FROM node:${NODE_VERSION}-alpine AS runtime
-ENV WORKDIR /opt
+ENV WORKDIR /src
 WORKDIR $WORKDIR
 
 RUN apk update && apk add build-base git curl
 RUN npm install -g pm2
 
-COPY --from=build /opt .
+COPY --from=build /src .
 
 RUN npm ci --omit=dev --ignore-scripts
 
@@ -44,4 +44,4 @@ EXPOSE 8081
 ENV PORT 8081
 ENV NODE_ENV production
 
-CMD ["pm2-runtime", "--interpreter", "node", "--interpreter-args=-r tsconfig-paths/register", "bin/dist/index.js"]
+CMD ["npm", "run", "start:prod"]
