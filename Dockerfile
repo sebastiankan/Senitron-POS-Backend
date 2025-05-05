@@ -44,4 +44,4 @@ EXPOSE 8081
 ENV PORT 8081
 ENV NODE_ENV production
 
-CMD ["pm2-runtime", "--interpreter", "node", "--interpreter-args=-r tsconfig-paths/register", "dist/index.js"]
+CMD ["pm2-runtime", "--interpreter", "node", "--interpreter-args=-r tsconfig-paths/register", "bin/dist/index.js"]
