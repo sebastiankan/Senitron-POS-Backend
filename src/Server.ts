@@ -1,7 +1,7 @@
 import "@tsed/platform-log-request"; // remove this import if you don&#x27;t want log request
 import "@tsed/platform-express"; // /!\ keep this import
 import "@tsed/ajv";
-import "./config/DataSources/MysqlDatasource";
+import "./config/DataSources/MysqlDatasource.js";
 
 import { join } from "node:path";
 
