@@ -2,6 +2,7 @@
 import { registerProvider } from "@tsed/di";
 import { Logger } from "@tsed/logger";
 import dotenv from "dotenv";
+import glob from "fast-glob";
 import { dirname } from "path";
 import path from "path";
 import { DataSource } from "typeorm";
@@ -16,17 +17,23 @@ registerProvider<DataSource>({
 	type: DataSource,
 	deps: [Logger],
 	async useAsyncFactory(logger: Logger) {
-		const __filename = fileURLToPath(import.meta.url);
-		const __dirname = dirname(__filename);
+		const __dirname = path.dirname(fileURLToPath(import.meta.url));
+		const files = await glob(path.resolve(__dirname, "../../dist/models/*.js"));
+
+		const entities = (
+			await Promise.all(
+				files.map(async (file) => {
+					const module = await import(file);
+					return Object.values(module).find((exp) => typeof exp === "function");
+				})
+			)
+		).filter((e): e is Function => typeof e === "function");
 
 		console.log("Entities path (resolved):", path.resolve(__dirname, "../../../dist/models/*.js"));
 
 		const MysqlDataSource = new DataSource({
 			type: "mysql",
-			entities: [
-				// 👇 This is what fixes your issue:
-				path.resolve(__dirname, "../../../dist/models/*.js")
-			],
+			entities: entities,
 			host: process.env.MYSQL_HOST!,
 			port: Number.parseInt(process.env.MYSQL_PORT!),
 			username: process.env.MYSQL_USER!,
