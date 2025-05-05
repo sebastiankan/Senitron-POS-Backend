@@ -2,9 +2,9 @@
   "compilerOptions": {
     "module": "Node16",
     "target": "es2022",
+    "moduleResolution": "node16",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "moduleResolution": "node16",
     "downlevelIteration": false,
     "isolatedModules": false,
     "suppressImplicitAnyIndexErrors": false,
@@ -24,6 +24,6 @@
     "noResolve": false,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "noEmit": true
+    "noEmit": false
   }
 }

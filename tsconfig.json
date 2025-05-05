@@ -4,7 +4,9 @@
     "baseUrl": ".",
     "noEmit": true,
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true
   },
   "include": [],
   "references": [

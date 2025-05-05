@@ -19,7 +19,6 @@ registerProvider<DataSource>({
 	async useAsyncFactory(logger: Logger) {
 		const __dirname = path.dirname(fileURLToPath(import.meta.url));
 		const files = await glob(path.resolve(__dirname, "../../dist/models/*.js"));
-
 		const entities = (
 			await Promise.all(
 				files.map(async (file) => {
