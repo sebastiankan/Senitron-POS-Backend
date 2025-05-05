@@ -1,4 +1,5 @@
-import { Injectable } from "@tsed/di";
+// src/config/DataSources/MysqlDatasource.ts
+import { registerProvider } from "@tsed/di";
 import { Logger } from "@tsed/logger";
 import dotenv from "dotenv";
 import { DataSource } from "typeorm";
@@ -7,16 +8,16 @@ dotenv.config();
 
 export const MYSQL_DATA_SOURCE = Symbol.for("MysqlDataSource");
 
-@Injectable({
+registerProvider<DataSource>({
 	provide: MYSQL_DATA_SOURCE,
 	type: DataSource,
-	useAsyncFactory: async (logger: Logger) => {
-		await new Promise<void>((resolve) => setTimeout(resolve, 5000)); // Optional delay
-		const baseDir = process.env.NODE_ENV === "production" ? "dist" : "src";
+	deps: [Logger],
+	async useAsyncFactory(logger: Logger) {
+		console.log("MysqlDatasourceProvider factory is running");
 
 		const MysqlDataSource = new DataSource({
 			type: "mysql",
-			entities: process.env.NODE_ENV === "production" ? ["dist/models/*.js"] : ["src/models/*.ts"], // migrations: [`${baseDir}/migrations/**/*.{ts,js}`],
+			entities: process.env.NODE_ENV === "production" ? ["dist/models/*.js"] : ["src/models/*.ts"],
 			host: process.env.MYSQL_HOST!,
 			port: Number.parseInt(process.env.MYSQL_PORT!),
 			username: process.env.MYSQL_USER!,
@@ -32,11 +33,9 @@ export const MYSQL_DATA_SOURCE = Symbol.for("MysqlDataSource");
 
 		return MysqlDataSource;
 	},
-	deps: [Logger],
 	hooks: {
-		$onDestroy(dataSource: DataSource) {
+		$onDestroy(dataSource) {
 			return dataSource.isInitialized && dataSource.close();
 		}
 	}
-})
-export class MysqlDatasourceProvider {}
+});

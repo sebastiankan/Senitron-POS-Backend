@@ -7,5 +7,7 @@ declare namespace NodeJS {
 		MYSQL_HOST: string;
 		MYSQL_PORT: string;
 		MYSQL_PASSWORD: string;
+		SENITRON_API_KEY: string;
+		SENITRON_API_BASE_URL: string;
 	}
 }

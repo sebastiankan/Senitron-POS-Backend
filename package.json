@@ -2,6 +2,9 @@
   "name": "senitron-pos-backend",
   "version": "1.0.0",
   "description": "",
+  "config": {
+    "datasource": "src/DataSources/MysqlDatasource.ts"
+  },
   "scripts": {
     "build": "npm run barrels && swc src --out-dir dist -s  --strip-leading-paths",
     "barrels": "barrels",
