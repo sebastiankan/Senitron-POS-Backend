@@ -21,6 +21,8 @@ ARG NODE_VERSION=20.11.0
 FROM node:${NODE_VERSION}-alpine AS build
 WORKDIR /opt
 
+COPY package*.json tsconfig*.json .barrels.json .swcrc processes.config.cjs ./
+
 # Install dependencies for native builds
 RUN apk add --no-cache build-base python3
 
@@ -47,7 +49,6 @@ RUN apk add --no-cache curl && npm install -g pm2
 # Copy built output & config files from the build stage
 COPY --from=build /opt/dist ./dist
 COPY --from=build /opt/package*.json ./
-COPY --from=build /opt/processes.config.cjs ./
 
 # Install only production dependencies
 RUN npm ci --omit=dev --ignore-scripts
