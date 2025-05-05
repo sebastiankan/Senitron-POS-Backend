@@ -21,40 +21,27 @@ ARG NODE_VERSION=20.11.0
 FROM node:${NODE_VERSION}-alpine AS build
 WORKDIR /opt
 
-COPY package*.json tsconfig*.json .barrels.json .swcrc processes.config.cjs ./
-
-# Install dependencies for native builds
-RUN apk add --no-cache build-base python3
-
-# Copy only necessary files first
-COPY package*.json tsconfig*.json .barrels.json .swcrc ./
-
+COPY package.json package-lock.json tsconfig.json tsconfig.base.json tsconfig.node.json .barrels.json .swcrc ./
 RUN npm ci
 
-# Copy the rest of the source code
 COPY ./src ./src
-
-# Build the project (assumes you use tsc or swc in `npm run build`)
+COPY processes.config.cjs .
 RUN npm run build
-
-
 
 ### Stage 2: Runtime
 FROM node:${NODE_VERSION}-alpine AS runtime
-WORKDIR /opt
+ENV WORKDIR /opt
+WORKDIR $WORKDIR
 
-# Install PM2 globally
-RUN apk add --no-cache curl && npm install -g pm2
+RUN apk update && apk add build-base git curl
+RUN npm install -g pm2
 
-# Copy built output & config files from the build stage
-COPY --from=build /opt/dist ./dist
-COPY --from=build /opt/package*.json ./
+COPY --from=build /opt .
 
-# Install only production dependencies
 RUN npm ci --omit=dev --ignore-scripts
 
 EXPOSE 8081
-ENV PORT=8081
-ENV NODE_ENV=production
+ENV PORT 8081
+ENV NODE_ENV production
 
 CMD ["pm2-runtime", "start", "processes.config.cjs", "--env", "production"]
