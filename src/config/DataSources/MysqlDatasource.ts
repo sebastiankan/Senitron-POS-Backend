@@ -18,7 +18,7 @@ registerProvider<DataSource>({
 	deps: [Logger],
 	async useAsyncFactory(logger: Logger) {
 		console.log("MysqlDatasourceProvider factory is running");
-
+		console.log("Entities paths =====>>>> ", [`${__dirname}/../../models/*.js`]);
 		const MysqlDataSource = new DataSource({
 			type: "mysql",
 			entities: [`${__dirname}/../../models/*.js`],
