@@ -27,7 +27,7 @@ registerProvider<DataSource>({
 
 		const MysqlDataSource = new DataSource({
 			type: "mysql",
-			entities: [`${__dirname}/../../models/*.js`],
+			entities: [entitiesPath],
 			host: process.env.MYSQL_HOST!,
 			port: Number.parseInt(process.env.MYSQL_PORT!),
 			username: process.env.MYSQL_USER!,
