@@ -44,4 +44,4 @@ EXPOSE 8081
 ENV PORT 8081
 ENV NODE_ENV production
 
-CMD ["pm2-runtime", "start", "processes.config.cjs", "--env", "production"]
+CMD ["pm2-runtime", "--interpreter", "ts-node", "--interpreter-args", "-r tsconfig-paths/register", "src/index.ts"]
