@@ -3,10 +3,11 @@ import { registerProvider } from "@tsed/di";
 import { Logger } from "@tsed/logger";
 import dotenv from "dotenv";
 import glob from "fast-glob";
-import { dirname } from "path";
 import path from "path";
 import { DataSource } from "typeorm";
 import { fileURLToPath } from "url";
+
+import * as entities from "../../models/index.js";
 
 dotenv.config();
 
@@ -19,14 +20,7 @@ registerProvider<DataSource>({
 	async useAsyncFactory(logger: Logger) {
 		const __dirname = path.dirname(fileURLToPath(import.meta.url));
 		const files = await glob(path.resolve(__dirname, "../../dist/models/*.js"));
-		const entities = (
-			await Promise.all(
-				files.map(async (file) => {
-					const module = await import(file);
-					return Object.values(module).find((exp) => typeof exp === "function");
-				})
-			)
-		).filter((e): e is Function => typeof e === "function");
+		const entityClasses: any[] = [];
 
 		console.log("=============================");
 		console.log("Entities", entities);
