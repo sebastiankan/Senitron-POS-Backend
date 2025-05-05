@@ -18,7 +18,8 @@ registerProvider<DataSource>({
 	async useAsyncFactory(logger: Logger) {
 		const __filename = fileURLToPath(import.meta.url);
 		const __dirname = dirname(__filename);
-		const entitiesPath = path.resolve(__dirname, "../../models/*.js");
+		const dir = process.env.NODE_ENV === "production" ? "dist" : "src";
+		const entitiesPath = path.resolve(__dirname, `../../${dir}/models/*.${dir === "dist" ? "js" : "ts"}`);
 		console.log("Entities path (resolved):", entitiesPath);
 
 		const MysqlDataSource = new DataSource({
