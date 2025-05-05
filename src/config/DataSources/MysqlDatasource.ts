@@ -29,7 +29,9 @@ registerProvider<DataSource>({
 			)
 		).filter((e): e is Function => typeof e === "function");
 
-		console.log("Entities path (resolved):", path.resolve(__dirname, "../../../dist/models/*.js"));
+		console.log("=============================");
+		console.log("Entities", entities);
+		console.log("=============================");
 
 		const MysqlDataSource = new DataSource({
 			type: "mysql",
