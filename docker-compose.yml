@@ -25,6 +25,9 @@ services:
     image: senitron-pos-backend/server:latest
     ports:
       - "8081:8081"
+    volumes:
+      - ./src:/src/src
+      - /src/node_modules
     environment:
       NODE_ENV: "${NODE_ENV}"
       PORT: "${PORT}"
