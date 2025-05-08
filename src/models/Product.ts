@@ -8,7 +8,7 @@ export class Product implements IProduct {
 		name: string;
 		sku: string;
 		price: string;
-		varianId?: string | undefined;
+		variantId?: string | undefined;
 	};
 
 	constructor(data: any) {
@@ -19,7 +19,7 @@ export class Product implements IProduct {
 			name: data.item_details?.name || "",
 			sku: data.item_details?.sku || "",
 			price: data.item_details?.price || "0.00",
-			varianId: data.item_details?.attr13 || "undefined"
+			variantId: data.item_details?.attr13 || "undefined"
 		};
 	}
 
