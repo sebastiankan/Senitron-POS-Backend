@@ -8,7 +8,7 @@ export class Product implements IProduct {
 		name: string;
 		sku: string;
 		price: string;
-		variantId?: string | undefined;
+		variantId?: number | undefined;
 	};
 
 	constructor(data: any) {
