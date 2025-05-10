@@ -74,6 +74,7 @@ export class DeviceService {
 	}
 
 	async findByDeviceId(deviceId: string): Promise<Device> {
+		console.log("findByDeviceId deviceId", deviceId);
 		const device = await this.deviceRepo.findOne({
 			where: { deviceId },
 			relations: { shop: true, cart: true }
