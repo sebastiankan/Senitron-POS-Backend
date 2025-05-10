@@ -3,4 +3,5 @@
  */
 export * from "./DevicesController.js";
 export * from "./EpcController.js";
+export * from "./PairKeyController.js";
 export * from "./ShopController.js";
