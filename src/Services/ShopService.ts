@@ -11,7 +11,7 @@ export class ShopService {
 	@Inject(MYSQL_DATA_SOURCE)
 	protected dataSource: DataSource;
 
-	@Inject(DeviceService) protected deviceService: DeviceService;
+	@Inject(() => DeviceService) protected deviceService: DeviceService;
 
 	shopRepository: Repository<Shop>;
 
@@ -50,7 +50,6 @@ export class ShopService {
 		let shop;
 		shop = await this.shopRepository.findOneBy({ id: params.tenant });
 		// Get or create Device
-		const device = await this.deviceService.findOrCreateByDeviceId(params);
 		if (shop) {
 			return shop;
 		}
