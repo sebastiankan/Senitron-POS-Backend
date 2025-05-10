@@ -25,6 +25,12 @@ export class ShopService {
 		return shop;
 	}
 
+	async getAll(): Promise<Shop[]> {
+		const shop = await this.shopRepository.find();
+		if (!shop) throw new NotFound("Shop Not Found");
+		return shop;
+	}
+
 	async findByTenant(tenant: string): Promise<Shop> {
 		const shop = await this.shopRepository.findOneBy({ tenant });
 		if (!shop) throw new NotFound("Shop Not Found");

@@ -22,4 +22,9 @@ export class ShopController {
 	async getOne(@QueryParams("id") id: string): Promise<Shop | null> {
 		return await this.shopService.findById(id);
 	}
+
+	@Get("/")
+	async getAll(): Promise<Shop[] | null> {
+		return await this.shopService.getAll();
+	}
 }
