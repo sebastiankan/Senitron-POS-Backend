@@ -9,8 +9,8 @@ export class Device extends BaseEntity {
 	@PrimaryGeneratedColumn("uuid")
 	id: string;
 
-	@Column({ type: "varchar", length: 50 })
-	name: string;
+	@Column({ type: "varchar", length: 50, nullable: true })
+	name?: string;
 
 	@Column({ type: "varchar", length: 16, unique: true })
 	deviceId: string;
