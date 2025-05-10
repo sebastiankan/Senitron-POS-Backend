@@ -62,7 +62,7 @@ export class DeviceController {
 		return this.deviceService.scan({ epc, deviceId, apiKey });
 	}
 
-	@Delete("/by-device/scan")
+	@Delete("/by-device/clear")
 	@Summary("Empty cart by deviceId")
 	@Returns(200, Cart)
 	async emptyBystaff(@QueryParams("deviceId") deviceId: string): Promise<Cart> {
