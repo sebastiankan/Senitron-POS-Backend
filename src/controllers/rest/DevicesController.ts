@@ -33,7 +33,7 @@ export class DeviceController {
 	@Get("/by-device")
 	@Summary("Get Device by deviceId")
 	@Returns(200, Device)
-	async getByStaffId(@QueryParams("deviceId") deviceId: string): Promise<Device> {
+	async getByStaffId(@HeaderParams("deviceId") deviceId: string): Promise<Device> {
 		return this.deviceService.findByDeviceId(deviceId);
 	}
 
@@ -47,7 +47,7 @@ export class DeviceController {
 	@Get("/by-device/cart")
 	@Summary("Get cart by deviceId")
 	@Returns(200, Cart)
-	async getCartByStaffId(@QueryParams("deviceId") deviceId: string): Promise<Cart> {
+	async getCartByStaffId(@HeaderParams("deviceId") deviceId: string): Promise<Cart> {
 		return this.deviceService.getCartByDeviceId(deviceId);
 	}
 
@@ -56,7 +56,7 @@ export class DeviceController {
 	@Returns(200, Cart)
 	async scanByDevice(
 		@HeaderParams("apiKey") apiKey: string,
-		@QueryParams("deviceId") deviceId: string,
+		@HeaderParams("deviceId") deviceId: string,
 		@QueryParams("epc") epc: string
 	): Promise<Cart> {
 		return this.deviceService.scan({ epc, deviceId, apiKey });
