@@ -8,6 +8,6 @@ export class PairKey extends BaseEntity {
 	@Column({ type: "varchar", length: 50, unique: true })
 	posDeviceId: string;
 
-	@Column({ type: "smallint", unique: true })
+	@Column({ type: "mediumint", unique: true })
 	digits: number;
 }
