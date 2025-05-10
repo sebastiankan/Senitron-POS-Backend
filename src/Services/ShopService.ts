@@ -52,7 +52,7 @@ export class ShopService {
 		if (shop) {
 			return shop;
 		}
-		shop = this.shopRepository.create();
+		shop = await this.create(params);
 		return await this.shopRepository.save(shop);
 	}
 
