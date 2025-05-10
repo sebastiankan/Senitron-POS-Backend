@@ -11,8 +11,7 @@ export class ShopService {
 	@Inject(MYSQL_DATA_SOURCE)
 	protected dataSource: DataSource;
 
-	@Inject(() => DeviceService) protected deviceService: DeviceService;
-
+	@Inject(DeviceService) protected deviceService: DeviceService;
 	shopRepository: Repository<Shop>;
 
 	async $onInit() {
