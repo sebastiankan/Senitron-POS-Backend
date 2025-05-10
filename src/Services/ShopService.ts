@@ -5,6 +5,7 @@ import { Shop } from "src/models/Shop.js";
 import { DataSource, Repository } from "typeorm";
 
 import { DeviceService } from "./DeviceService.js";
+import { PairKeyService } from "./PairKeyService.js";
 
 @Injectable()
 export class ShopService {
@@ -12,6 +13,7 @@ export class ShopService {
 	protected dataSource: DataSource;
 
 	@Inject(DeviceService) protected deviceService: DeviceService;
+	@Inject(PairKeyService) protected pairKeyService: PairKeyService;
 	shopRepository: Repository<Shop>;
 
 	async $onInit() {
@@ -45,7 +47,7 @@ export class ShopService {
 		return await this.shopRepository.save(shop);
 	}
 
-	async getOrCreate(params: { tenant: string; deviceId: string }): Promise<Shop> {
+	async getOrCreate(params: { tenant: string }): Promise<Shop> {
 		let shop;
 		shop = await this.shopRepository.findOneBy({ tenant: params.tenant });
 		// Get or create Device
@@ -68,9 +70,12 @@ export class ShopService {
 		return shop;
 	}
 
-	async auth(params: { tenant: string; apiKey: string; deviceId: string }): Promise<Shop> {
+	async auth(params: { tenant: string; apiKey: string; pairDigits: number }): Promise<string> {
+		const posDeviceId = await this.pairKeyService.getPosDeviceIdByDigits(params.pairDigits);
+		if (!posDeviceId) throw new BadRequest("Pair key not found");
 		await this.getOrCreate(params);
-		return await this.registerDevice(params);
+		await this.registerDevice({ ...params, deviceId: posDeviceId });
+		return posDeviceId;
 	}
 
 	async update(id: string, updates: Partial<Shop>): Promise<Shop> {

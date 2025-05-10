@@ -1,5 +1,5 @@
 import { Controller, Inject } from "@tsed/di";
-import { BodyParams, HeaderParams, QueryParams } from "@tsed/platform-params";
+import { BodyParams, QueryParams } from "@tsed/platform-params";
 import { Get, Post, Put } from "@tsed/schema";
 import { Shop } from "src/models/Shop.js";
 import { ShopService } from "src/Services/ShopService.js";
@@ -13,9 +13,10 @@ export class ShopController {
 		return await this.shopService.create(shopData);
 	}
 
+	// Returns POS-Extension device ID
 	@Post("/auth")
-	async auth(@HeaderParams("deviceId") deviceId: string, @BodyParams() params: { tenant: string; apiKey: string }): Promise<Shop> {
-		return await this.shopService.auth({ ...params, deviceId });
+	async auth(@BodyParams() params: { tenant: string; apiKey: string; pairDigits: number }): Promise<String> {
+		return await this.shopService.auth(params);
 	}
 
 	@Put("/")
