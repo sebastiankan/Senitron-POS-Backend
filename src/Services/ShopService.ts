@@ -47,7 +47,7 @@ export class ShopService {
 
 	async getOrCreate(params: { tenant: string; deviceId: string }): Promise<Shop> {
 		let shop;
-		shop = await this.shopRepository.findOneBy({ id: params.tenant });
+		shop = await this.shopRepository.findOneBy({ tenant: params.tenant });
 		// Get or create Device
 		if (shop) {
 			return shop;
