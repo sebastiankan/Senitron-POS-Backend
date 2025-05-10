@@ -5,7 +5,7 @@ import { Cart } from "./Cart.js";
 import { Shop } from "./Shop.js";
 
 @Entity()
-export class Seller extends BaseEntity {
+export class Device extends BaseEntity {
 	@PrimaryGeneratedColumn("uuid")
 	id: string;
 
@@ -13,9 +13,9 @@ export class Seller extends BaseEntity {
 	name: string;
 
 	@Column({ type: "varchar", length: 16, unique: true })
-	staffMemberId: string;
+	deviceId: string;
 
-	@ManyToOne(() => Shop, (shop) => shop.sellers, { onDelete: "CASCADE" })
+	@ManyToOne(() => Shop, (shop) => shop.devices, { onDelete: "CASCADE" })
 	@JoinColumn()
 	shop: Relation<Shop>;
 

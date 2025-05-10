@@ -3,5 +3,5 @@
  */
 export * from "./Cart.js";
 export * from "./Product.js";
-export * from "./Seller.js";
+export * from "./DeviceId.js";
 export * from "./Shop.js";
