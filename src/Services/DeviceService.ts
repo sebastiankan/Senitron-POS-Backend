@@ -35,31 +35,31 @@ export class DeviceService {
 		const cart = this.cartRepository.create();
 		await this.cartRepository.save(cart);
 
-		const seller = this.deviceRepo.create({
+		const device = this.deviceRepo.create({
 			...data,
 			shop,
 			cart
 		});
 
-		return await this.deviceRepo.save(seller);
+		return await this.deviceRepo.save(device);
 	}
 
 	async update(id: string, updates: Partial<Device>): Promise<Device> {
-		const seller = await this.deviceRepo.findOneBy({ id });
-		if (!seller) throw new NotFound("Seller not found");
+		const device = await this.deviceRepo.findOneBy({ id });
+		if (!device) throw new NotFound("device not found");
 
-		Object.assign(seller, updates);
-		await this.deviceRepo.save(seller);
+		Object.assign(device, updates);
+		await this.deviceRepo.save(device);
 		return this.findById(id);
 	}
 
 	async findById(id: string): Promise<Device> {
-		const seller = await this.deviceRepo.findOne({
+		const device = await this.deviceRepo.findOne({
 			where: { id },
 			relations: { shop: true, cart: true }
 		});
-		if (!seller) throw new NotFound("Seller not found");
-		return seller;
+		if (!device) throw new NotFound("device not found");
+		return device;
 	}
 
 	async findOrCreateByDeviceId(params: { deviceId: string; tenant: string }): Promise<Device> {
@@ -74,30 +74,30 @@ export class DeviceService {
 	}
 
 	async findByDeviceId(deviceId: string): Promise<Device> {
-		const seller = await this.deviceRepo.findOne({
+		const device = await this.deviceRepo.findOne({
 			where: { deviceId },
 			relations: { shop: true, cart: true }
 		});
-		if (!seller) throw new NotFound("Seller not found");
-		return seller;
+		if (!device) throw new NotFound("device not found");
+		return device;
 	}
 
 	async getCartById(id: string): Promise<Cart> {
-		const seller = await this.findById(id);
-		if (!seller.cart) throw new NotFound("Cart not found for this seller");
-		return seller.cart;
+		const device = await this.findById(id);
+		if (!device.cart) throw new NotFound("Cart not found for this device");
+		return device.cart;
 	}
 
 	async getCartByDeviceId(deviceId: string): Promise<Cart> {
 		const device = await this.findByDeviceId(deviceId);
-		if (!device.cart) throw new NotFound("Cart not found for this seller");
+		if (!device.cart) throw new NotFound("Cart not found for this device");
 		return device.cart;
 	}
 
 	async scan(params: { apiKey: string; epc: string; deviceId: string }): Promise<any> {
-		const seller = await this.findByDeviceId(params.deviceId);
-		const tenant = seller.shop.tenant;
-		const cart = seller.cart;
+		const device = await this.findByDeviceId(params.deviceId);
+		const tenant = device.shop.tenant;
+		const cart = device.cart;
 		const apiKey = params.apiKey;
 		const epc = params.epc;
 		const data = await this.epcService.decode({ epc, apiKey, tenant });
@@ -112,8 +112,8 @@ export class DeviceService {
 	}
 
 	async emptyCart(deviceId: string) {
-		const seller = await this.findByDeviceId(deviceId);
-		let cart = seller.cart;
+		const device = await this.findByDeviceId(deviceId);
+		let cart = device.cart;
 		cart.data = null;
 		await cart.save();
 		return cart;
