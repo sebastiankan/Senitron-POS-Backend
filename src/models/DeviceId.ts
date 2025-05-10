@@ -12,7 +12,7 @@ export class Device extends BaseEntity {
 	@Column({ type: "varchar", length: 50, nullable: true })
 	name?: string;
 
-	@Column({ type: "varchar", length: 16, unique: true })
+	@Column({ type: "varchar", length: 64, unique: true })
 	deviceId: string;
 
 	@ManyToOne(() => Shop, (shop) => shop.devices, { onDelete: "CASCADE" })
