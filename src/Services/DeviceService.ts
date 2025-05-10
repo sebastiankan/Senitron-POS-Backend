@@ -62,6 +62,17 @@ export class DeviceService {
 		return seller;
 	}
 
+	async findOrCreateByDeviceId(params: { deviceId: string; tenant: string }): Promise<Device> {
+		let device = await this.deviceRepo.findOne({
+			where: { deviceId: params.deviceId, shop: { tenant: params.tenant } },
+			relations: { shop: true, cart: true }
+		});
+		if (!device) {
+			device = await this.create(params);
+		}
+		return device;
+	}
+
 	async findByDeviceId(deviceId: string): Promise<Device> {
 		const seller = await this.deviceRepo.findOne({
 			where: { deviceId },
@@ -83,11 +94,13 @@ export class DeviceService {
 		return device.cart;
 	}
 
-	async scan(epc: string, deviceId: string): Promise<any> {
-		const seller = await this.findByDeviceId(deviceId);
+	async scan(params: { apiKey: string; epc: string; deviceId: string }): Promise<any> {
+		const seller = await this.findByDeviceId(params.deviceId);
 		const tenant = seller.shop.tenant;
 		const cart = seller.cart;
-		const data = await this.epcService.decode({ epc, tenant });
+		const apiKey = params.apiKey;
+		const epc = params.epc;
+		const data = await this.epcService.decode({ epc, apiKey, tenant });
 		const existingData = cart.data ?? {};
 		const existingProducts = Array.isArray(existingData.products) ? existingData.products : [];
 

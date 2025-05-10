@@ -1,13 +1,17 @@
 import { Inject, Injectable } from "@tsed/di";
-import { NotFound } from "@tsed/exceptions";
+import { BadRequest, NotFound } from "@tsed/exceptions";
 import { MYSQL_DATA_SOURCE } from "src/config/DataSources/MysqlDatasource.js";
 import { Shop } from "src/models/Shop.js";
 import { DataSource, Repository } from "typeorm";
+
+import { DeviceService } from "./DeviceService.js";
 
 @Injectable()
 export class ShopService {
 	@Inject(MYSQL_DATA_SOURCE)
 	protected dataSource: DataSource;
+
+	@Inject(DeviceService) protected deviceService: DeviceService;
 
 	shopRepository: Repository<Shop>;
 
@@ -40,6 +44,35 @@ export class ShopService {
 	async create(data: Partial<Shop>): Promise<Shop> {
 		const shop = this.shopRepository.create(data);
 		return await this.shopRepository.save(shop);
+	}
+
+	async getOrCreate(params: { tenant: string; deviceId: string }): Promise<Shop> {
+		let shop;
+		shop = await this.shopRepository.findOneBy({ id: params.tenant });
+		// Get or create Device
+		const device = await this.deviceService.findOrCreateByDeviceId(params);
+		if (shop) {
+			return shop;
+		}
+		shop = this.shopRepository.create();
+		return await this.shopRepository.save(shop);
+	}
+
+	async registerDevice(params: { deviceId: string; tenant: string }) {
+		const shop = await this.shopRepository.findOneBy({ id: params.tenant });
+		if (!shop) throw new BadRequest("Shop not found");
+		const deviceRegistedredInShop = shop.devices.map((e) => e.deviceId).includes(params.deviceId);
+		if (!deviceRegistedredInShop) {
+			const device = await this.deviceService.findOrCreateByDeviceId(params);
+			shop.devices.push(device);
+			await shop.save();
+		}
+		return shop;
+	}
+
+	async auth(params: { tenant: string; apiKey: string; deviceId: string }): Promise<Shop> {
+		await this.getOrCreate(params);
+		return await this.registerDevice(params);
 	}
 
 	async update(id: string, updates: Partial<Shop>): Promise<Shop> {

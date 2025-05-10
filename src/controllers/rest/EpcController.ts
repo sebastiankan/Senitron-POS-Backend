@@ -1,5 +1,5 @@
 import { Controller, Inject } from "@tsed/di";
-import { QueryParams } from "@tsed/platform-params";
+import { HeaderParams, QueryParams } from "@tsed/platform-params";
 import { Get, Returns, string } from "@tsed/schema";
 import { EpcService as EpcService } from "src/Services/EpcService.js";
 
@@ -9,10 +9,11 @@ export class EpcController {
 
 	@Get("/decode")
 	@(Returns(200).ContentType("application/json"))
-	async decodeEpc(@QueryParams() params: Map<string, string>) {
+	async decodeEpc(@HeaderParams("apiKey") apiKey: string, @QueryParams() params: Map<string, string>) {
 		return await this.epcService.decode({
 			tenant: params.get("tenant")!,
-			epc: params.get("epc")!
+			epc: params.get("epc")!,
+			apiKey: apiKey
 		});
 	}
 }

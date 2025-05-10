@@ -1,5 +1,5 @@
 import { Controller, Inject } from "@tsed/di";
-import { BodyParams, QueryParams } from "@tsed/platform-params";
+import { BodyParams, HeaderParams, QueryParams } from "@tsed/platform-params";
 import { Get, Post, Put } from "@tsed/schema";
 import { Shop } from "src/models/Shop.js";
 import { ShopService } from "src/Services/ShopService.js";
@@ -11,6 +11,11 @@ export class ShopController {
 	@Post("/")
 	async create(@BodyParams() shopData: Partial<Shop>): Promise<Shop> {
 		return await this.shopService.create(shopData);
+	}
+
+	@Post("/auth")
+	async auth(@HeaderParams("deviceId") deviceId: string, @BodyParams() params: { tenant: string; apiKey: string }): Promise<Shop> {
+		return await this.shopService.auth({ ...params, deviceId });
 	}
 
 	@Put("/")
