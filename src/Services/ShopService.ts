@@ -59,7 +59,7 @@ export class ShopService {
 	async registerDevice(params: { deviceId: string; tenant: string }) {
 		const shop = await this.shopRepository.findOneBy({ tenant: params.tenant });
 		if (!shop) throw new BadRequest("Shop not found");
-		const deviceRegistedredInShop = shop.devices.map((e) => e.deviceId).includes(params.deviceId);
+		const deviceRegistedredInShop = (shop.devices || []).map((e) => e.deviceId).includes(params.deviceId);
 		if (!deviceRegistedredInShop) {
 			const device = await this.deviceService.findOrCreateByDeviceId(params);
 			shop.devices.push(device);
