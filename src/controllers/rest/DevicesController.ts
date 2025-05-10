@@ -47,7 +47,7 @@ export class DeviceController {
 	@Get("/by-device/cart")
 	@Summary("Get cart by deviceId")
 	@Returns(200, Cart)
-	async getCartByStaffId(@HeaderParams("deviceId") deviceId: string): Promise<Cart> {
+	async getCartByStaffId(@QueryParams("deviceId") deviceId: string): Promise<Cart> {
 		return this.deviceService.getCartByDeviceId(deviceId);
 	}
 
