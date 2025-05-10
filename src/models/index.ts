@@ -3,5 +3,6 @@
  */
 export * from "./Cart.js";
 export * from "./DeviceId.js";
+export * from "./PairKey.js";
 export * from "./Product.js";
 export * from "./Shop.js";
