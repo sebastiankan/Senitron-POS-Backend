@@ -20,7 +20,7 @@ export class ShopService {
 	}
 
 	async findById(id: string): Promise<Shop> {
-		const shop = await this.shopRepository.findOneBy({ id });
+		const shop = await this.shopRepository.findOne({ where: { id }, relations: { devices: true } });
 		if (!shop) throw new NotFound("Shop Not Found");
 		return shop;
 	}
