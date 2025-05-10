@@ -23,7 +23,7 @@ export class ShopController {
 		return await this.shopService.findById(id);
 	}
 
-	@Get("/")
+	@Get("/all")
 	async getAll(): Promise<Shop[] | null> {
 		return await this.shopService.getAll();
 	}
