@@ -21,8 +21,9 @@ export class SenitronAPI {
 		try {
 			const response = await fetch(url);
 			if (!response.ok) {
-				console.error(`Senitron API request failed for EPC ${params.epc}: ${response.status} ${response.statusText}`);
-				throw new Error(`Senitron API request failed: ${response.status} ${response.statusText}`);
+				throw new BadRequest(
+					`Senitron API request failed: ${response.status} ${response.statusText}. Input parameters: tenant=${params.tenant}, epc=${params.epc}`
+				);
 			}
 
 			const data = await response.json();
@@ -30,7 +31,7 @@ export class SenitronAPI {
 			return product;
 		} catch (error) {
 			console.error("Error fetching product details from Senitron API:", error);
-			throw new BadRequest("Error fetching product details from Senitron API", error);
+			throw error;
 		}
 	}
 }
