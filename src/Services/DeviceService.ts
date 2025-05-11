@@ -141,6 +141,24 @@ export class DeviceService {
 		return device.cart;
 	}
 
+	async removeProductFromCart(deviceId: string, itemNumber: string): Promise<Cart> {
+		const device = await this.findByDeviceId(deviceId);
+		if (!device.cart) throw new NotFound("Cart not found for this device");
+
+		const cart = device.cart;
+		const existingData = cart.data ?? {};
+		const existingProducts = Array.isArray(existingData.products) ? existingData.products : [];
+
+		const updatedProducts = existingProducts.filter((product: { item_number: string }) => product.item_number !== itemNumber);
+
+		cart.data = {
+			products: updatedProducts
+		};
+
+		await cart.save();
+		return cart;
+	}
+
 	async emptyCart(deviceId: string) {
 		const device = await this.findByDeviceId(deviceId);
 		let cart = device.cart;

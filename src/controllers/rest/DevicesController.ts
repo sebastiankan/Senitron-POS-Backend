@@ -70,6 +70,13 @@ export class DeviceController {
 		return this.deviceService.changeCartScanMode(deviceId, mode);
 	}
 
+	@Delete("/by-device/cart/product")
+	@Summary("Remove a product from the cart by deviceId and itemNumber")
+	@Returns(200, Cart)
+	async removeProductFromCart(@QueryParams("deviceId") deviceId: string, @QueryParams("itemNumber") itemNumber: string): Promise<Cart> {
+		return this.deviceService.removeProductFromCart(deviceId, itemNumber);
+	}
+
 	@Delete("/by-device/clear")
 	@Summary("Empty cart by deviceId")
 	@Returns(200, Cart)
