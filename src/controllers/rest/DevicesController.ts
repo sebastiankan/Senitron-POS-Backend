@@ -66,7 +66,7 @@ export class DeviceController {
 	@Patch("/by-device/mode")
 	@Summary("Update Device mode by deviceId")
 	@Returns(200, Device)
-	async updateModeByDeviceId(@BodyParams("deviceId") deviceId: string, @BodyParams("mode") mode: ScanMode): Promise<Cart> {
+	async updateModeByDeviceId(@QueryParams("deviceId") deviceId: string, @QueryParams("mode") mode: ScanMode): Promise<Cart> {
 		return this.deviceService.changeCartScanMode(deviceId, mode);
 	}
 
