@@ -107,9 +107,19 @@ export class DeviceService {
 		const existingData = cart.data ?? {};
 		const existingProducts = Array.isArray(existingData.products) ? existingData.products : [];
 		console.log("existingProducts", existingProducts);
-		cart.data = {
-			products: [...existingProducts, data]
-		};
+		if (cart.mode === ScanMode.REMOVE) {
+			const index = existingProducts.findIndex((product: { item_number: string }) => product.item_number === data.item_number);
+			if (index !== -1) {
+				existingProducts.splice(index, 1);
+			}
+			cart.data = {
+				products: existingProducts
+			};
+		} else {
+			cart.data = {
+				products: [...existingProducts, data]
+			};
+		}
 		await cart.save();
 		return cart;
 	}
