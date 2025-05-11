@@ -1,6 +1,7 @@
 import { Controller, Inject } from "@tsed/di";
 import { BodyParams, HeaderParams, QueryParams } from "@tsed/platform-params";
-import { Delete, Get, Head, Post, Put, Returns, Summary } from "@tsed/schema";
+import { Delete, Get, Patch, Post, Put, Returns, Summary } from "@tsed/schema";
+import { ScanMode } from "src/enums/ScanMode.js";
 import { Cart } from "src/models/Cart.js";
 import { Device } from "src/models/DeviceId.js";
 import { DeviceService } from "src/Services/DeviceService.js";
@@ -60,6 +61,13 @@ export class DeviceController {
 		@QueryParams("epc") epc: string
 	): Promise<Cart> {
 		return this.deviceService.scan({ epc, deviceId, apiKey });
+	}
+
+	@Patch("/by-device/mode")
+	@Summary("Update Device mode by deviceId")
+	@Returns(200, Device)
+	async updateModeByDeviceId(@BodyParams("deviceId") deviceId: string, @BodyParams("mode") mode: ScanMode): Promise<Cart> {
+		return this.deviceService.changeCartScanMode(deviceId, mode);
 	}
 
 	@Delete("/by-device/clear")

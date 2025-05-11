@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { MYSQL_DATA_SOURCE } from "src/config/DataSources/MysqlDatasource.js";
+import { ScanMode } from "src/enums/ScanMode.js";
 import { Cart } from "src/models/Cart.js";
 import { Device } from "src/models/DeviceId.js";
 import { Shop } from "src/models/Shop.js";
@@ -111,6 +112,14 @@ export class DeviceService {
 		};
 		await cart.save();
 		return cart;
+	}
+
+	async changeCartScanMode(deviceId: string, mode: ScanMode) {
+		const device = await this.findByDeviceId(deviceId);
+		if (!device.cart) throw new NotFound("Cart not found for this device");
+		device.cart.mode = mode;
+		await device.cart.save();
+		return device.cart;
 	}
 
 	async emptyCart(deviceId: string) {
