@@ -21,6 +21,7 @@ export class SenitronAPI {
 		try {
 			const response = await fetch(url);
 			if (!response.ok) {
+				console.error(`Senitron API request failed for EPC ${params.epc}: ${response.status} ${response.statusText}`);
 				throw new Error(`Senitron API request failed: ${response.status} ${response.statusText}`);
 			}
 

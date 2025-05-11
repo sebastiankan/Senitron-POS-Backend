@@ -22,5 +22,7 @@ if (isProduction) {
 }
 
 export default <DILoggerOptions>{
-	disableRoutesSummary: isProduction
+	disableRoutesSummary: isProduction,
+	level: "error", // Only logs errors and above
+	logRequest: !isProduction // Disables automatic request logs
 };

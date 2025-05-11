@@ -98,7 +98,6 @@ export class DeviceService {
 
 	async scan(params: { apiKey: string; epc: string; deviceId: string }): Promise<any> {
 		const device = await this.findByDeviceId(params.deviceId);
-		console.log("device", device);
 		const tenant = device.shop.tenant;
 		const cart = device.cart;
 		const apiKey = params.apiKey;
