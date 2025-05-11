@@ -97,6 +97,7 @@ export class DeviceService {
 
 	async scan(params: { apiKey: string; epc: string; deviceId: string }): Promise<any> {
 		const device = await this.findByDeviceId(params.deviceId);
+		console.log("device", device);
 		const tenant = device.shop.tenant;
 		const cart = device.cart;
 		const apiKey = params.apiKey;
@@ -104,7 +105,7 @@ export class DeviceService {
 		const data = await this.epcService.decode({ epc, apiKey, tenant });
 		const existingData = cart.data ?? {};
 		const existingProducts = Array.isArray(existingData.products) ? existingData.products : [];
-
+		console.log("existingProducts", existingProducts);
 		cart.data = {
 			products: [...existingProducts, data]
 		};
