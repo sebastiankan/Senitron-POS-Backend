@@ -30,7 +30,7 @@ export class SenitronAPI {
 			return product;
 		} catch (error) {
 			console.error("Error fetching product details from Senitron API:", error);
-			throw error;
+			throw new BadRequest("Error fetching product details from Senitron API", error);
 		}
 	}
 }
