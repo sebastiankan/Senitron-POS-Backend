@@ -106,8 +106,9 @@ export class DeviceService {
 		const data = await this.epcService.decode({ epc, apiKey, tenant });
 		const existingData = cart.data ?? {};
 		const existingProducts = Array.isArray(existingData.products) ? existingData.products : [];
-		console.log("existingProducts", existingProducts);
+
 		if (cart.mode === ScanMode.REMOVE) {
+			console.log("New Scan in Remove Mode with epc", epc);
 			const index = existingProducts.findIndex((product: { item_number: string }) => product.item_number === data.item_number);
 			if (index !== -1) {
 				existingProducts.splice(index, 1);
@@ -116,6 +117,14 @@ export class DeviceService {
 				products: existingProducts
 			};
 		} else {
+			console.log("New Scan in Add Mode with epc", epc);
+			const existingProduct = existingProducts.find((product: { item_number: string }) => product.item_number === data.item_number);
+
+			if (existingProduct) {
+				console.log("Product already exists in the cart, returning existing cart");
+				return cart;
+			}
+			console.log("Adding new product to cart", data);
 			cart.data = {
 				products: [...existingProducts, data]
 			};
