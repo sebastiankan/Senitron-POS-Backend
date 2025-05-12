@@ -63,6 +63,17 @@ export class DeviceController {
 		return this.deviceService.scan({ epc, deviceId, apiKey });
 	}
 
+	@Post("/by-device/bulk-scan")
+	@Summary("Import multiple scanned EPCs to cart by deviceId")
+	@Returns(200, Cart)
+	async bulkScanByDevice(
+		@HeaderParams("apiKey") apiKey: string,
+		@HeaderParams("deviceId") deviceId: string,
+		@BodyParams("epcs") epcs: string[]
+	): Promise<Cart> {
+		return this.deviceService.bulkScan({ apiKey, epcs, deviceId });
+	}
+
 	@Patch("/by-device/mode")
 	@Summary("Update Device mode by deviceId")
 	@Returns(200, Device)

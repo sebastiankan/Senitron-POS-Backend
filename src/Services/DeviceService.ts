@@ -132,6 +132,43 @@ export class DeviceService {
 		return cart;
 	}
 
+	async bulkScan(params: { apiKey: string; epcs: string[]; deviceId: string }): Promise<any> {
+		const device = await this.findByDeviceId(params.deviceId);
+		const tenant = device.shop.tenant;
+		const cart = device.cart;
+		const apiKey = params.apiKey;
+		const epcs = params.epcs;
+		const existingData = cart.data ?? {};
+		const existingProducts = Array.isArray(existingData.products) ? existingData.products : [];
+
+		for (const epc of epcs) {
+			const data = await this.epcService.decode({ epc, apiKey, tenant });
+
+			if (cart.mode === ScanMode.REMOVE) {
+				console.log("Bulk Scan in Remove Mode with epc", epc);
+				const index = existingProducts.findIndex((product: { epc: string }) => product.epc === data.epc);
+				if (index !== -1) {
+					existingProducts.splice(index, 1);
+				}
+			} else {
+				console.log("Bulk Scan in Add Mode with epc", epc);
+				const existingProduct = existingProducts.find((product: { epc: string }) => product.epc === data.epc);
+
+				if (!existingProduct) {
+					console.log("Adding new product to cart", data);
+					existingProducts.push(data);
+				}
+			}
+		}
+
+		cart.data = {
+			products: existingProducts
+		};
+
+		await cart.save();
+		return cart;
+	}
+
 	async changeCartScanMode(deviceId: string, mode: ScanMode) {
 		const device = await this.findByDeviceId(deviceId);
 		if (!device.cart) throw new NotFound("Cart not found for this device");
