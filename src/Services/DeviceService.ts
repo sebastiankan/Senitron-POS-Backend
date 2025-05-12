@@ -108,7 +108,7 @@ export class DeviceService {
 
 		if (cart.mode === ScanMode.REMOVE) {
 			console.log("New Scan in Remove Mode with epc", epc);
-			const index = existingProducts.findIndex((product: { item_number: string }) => product.item_number === data.item_number);
+			const index = existingProducts.findIndex((product: { epc: string }) => product.epc === data.epc);
 			if (index !== -1) {
 				existingProducts.splice(index, 1);
 			}
@@ -117,7 +117,7 @@ export class DeviceService {
 			};
 		} else {
 			console.log("New Scan in Add Mode with epc", epc);
-			const existingProduct = existingProducts.find((product: { item_number: string }) => product.item_number === data.item_number);
+			const existingProduct = existingProducts.find((product: { epc: string }) => product.epc === data.epc);
 
 			if (existingProduct) {
 				console.log("Product already exists in the cart, returning existing cart");
