@@ -11,7 +11,6 @@ export class PairKeyController {
 
 	@Post("/generate")
 	async generate(@BodyParams("posDeviceId") posDeviceId: string): Promise<PairKey> {
-		throw new BadRequest("Test error");
 		return await this.pairKeyService.generate(posDeviceId);
 	}
 
