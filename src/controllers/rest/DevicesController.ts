@@ -84,8 +84,8 @@ export class DeviceController {
 	@Delete("/by-device/cart/product")
 	@Summary("Remove a product from the cart by deviceId and itemNumber")
 	@Returns(200, Cart)
-	async removeProductFromCart(@QueryParams("deviceId") deviceId: string, @QueryParams("itemNumber") itemNumber: string): Promise<Cart> {
-		return this.deviceService.removeProductFromCart(deviceId, itemNumber);
+	async removeProductFromCart(@QueryParams("deviceId") deviceId: string, @QueryParams("serial") serial: string): Promise<Cart> {
+		return this.deviceService.removeProductFromCart(deviceId, serial);
 	}
 
 	@Delete("/by-device/clear")

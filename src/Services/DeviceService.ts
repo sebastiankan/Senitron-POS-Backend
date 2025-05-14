@@ -177,7 +177,7 @@ export class DeviceService {
 		return device.cart;
 	}
 
-	async removeProductFromCart(deviceId: string, itemNumber: string): Promise<Cart> {
+	async removeProductFromCart(deviceId: string, serial: string): Promise<Cart> {
 		const device = await this.findByDeviceId(deviceId);
 		if (!device.cart) throw new NotFound("Cart not found for this device");
 
@@ -185,7 +185,7 @@ export class DeviceService {
 		const existingData = cart.data ?? {};
 		const existingProducts = Array.isArray(existingData.products) ? existingData.products : [];
 
-		const updatedProducts = existingProducts.filter((product: { item_number: string }) => product.item_number !== itemNumber);
+		const updatedProducts = existingProducts.filter((product: { serial_number: string }) => product.serial_number !== serial);
 
 		cart.data = {
 			products: updatedProducts
