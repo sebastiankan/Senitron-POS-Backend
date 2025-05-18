@@ -42,6 +42,8 @@ export class DeviceService {
 			cart
 		});
 
+		console.log(`Created Device with Tenant: ${device?.shop?.tenant} -> Device Name: ${device?.name}`);
+
 		return await this.deviceRepo.save(device);
 	}
 
@@ -86,6 +88,7 @@ export class DeviceService {
 			where: { deviceId },
 			relations: { shop: true, cart: true }
 		});
+		console.log(`Tenant: ${device?.shop?.tenant} -> Device Name: ${device?.name}`);
 		if (!device) throw new NotFound("device not found");
 		return device;
 	}
@@ -113,7 +116,7 @@ export class DeviceService {
 		const existingProducts = Array.isArray(existingData.products) ? existingData.products : [];
 
 		if (cart.mode === ScanMode.REMOVE) {
-			console.log("New Scan in Remove Mode with epc", epc);
+			console.log(`New Scan in Remove Mode with epc: ${epc} -> Tenant: ${device?.shop?.tenant} -> Device Name: ${device?.name}`);
 			const index = existingProducts.findIndex((product: { epc: string }) => product.epc === data.epc);
 			if (index !== -1) {
 				existingProducts.splice(index, 1);
@@ -122,7 +125,7 @@ export class DeviceService {
 				products: existingProducts
 			};
 		} else {
-			console.log("New Scan in Add Mode with epc", epc);
+			console.log(`New Scan in Add Mode with epc: ${epc} -> Tenant: ${device?.shop?.tenant} -> Device Name: ${device?.name}`);
 			const existingProduct = existingProducts.find((product: { epc: string }) => product.epc === data.epc);
 
 			if (existingProduct) {
@@ -147,21 +150,22 @@ export class DeviceService {
 		const existingData = cart.data ?? {};
 		const existingProducts = Array.isArray(existingData.products) ? existingData.products : [];
 
+		console.log(
+			`New Bulk Scan in ${ScanMode.REMOVE} Mode with epcs: ${epcs} -> Tenant: ${device?.shop?.tenant} -> Device Name: ${device?.name}`
+		);
+
 		for (const epc of epcs) {
 			const data = await this.epcService.decode({ epc, apiKey, tenant });
 
 			if (cart.mode === ScanMode.REMOVE) {
-				console.log("Bulk Scan in Remove Mode with epc", epc);
 				const index = existingProducts.findIndex((product: { epc: string }) => product.epc === data.epc);
 				if (index !== -1) {
 					existingProducts.splice(index, 1);
 				}
 			} else {
-				console.log("Bulk Scan in Add Mode with epc", epc);
 				const existingProduct = existingProducts.find((product: { epc: string }) => product.epc === data.epc);
 
 				if (!existingProduct) {
-					console.log("Adding new product to cart", data);
 					existingProducts.push(data);
 				}
 			}
@@ -180,13 +184,16 @@ export class DeviceService {
 		if (!device.cart) throw new NotFound("Cart not found for this device");
 		device.cart.mode = mode;
 		await device.cart.save();
+		console.log(`Changed cart mode to ${mode} for Tenant: ${device.shop.tenant} deviceId: ${deviceId} -> deviceName: ${device.name}`);
 		return device.cart;
 	}
 
 	async removeProductFromCart(deviceId: string, serial: string): Promise<Cart> {
 		const device = await this.findByDeviceId(deviceId);
 		if (!device.cart) throw new NotFound("Cart not found for this device");
-
+		console.log(
+			`Removing product with serial: ${serial} from cart for -> tenant: ${device.shop.tenant} deviceId: ${deviceId} -> deviceName: ${device.name}`
+		);
 		const cart = device.cart;
 		const existingData = cart.data ?? {};
 		const existingProducts = Array.isArray(existingData.products) ? existingData.products : [];
@@ -206,6 +213,7 @@ export class DeviceService {
 		let cart = device.cart;
 		cart.data = null;
 		await cart.save();
+		console.log(`Emptying cart for Tenant: ${device.shop.tenant} deviceId: ${deviceId} -> deviceName: ${device.name}`);
 		return cart;
 	}
 }
