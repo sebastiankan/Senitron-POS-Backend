@@ -65,11 +65,17 @@ export class DeviceService {
 
 	async findOrCreateByDeviceId(params: { deviceId: string; tenant: string }): Promise<Device> {
 		let device = await this.deviceRepo.findOne({
-			where: { deviceId: params.deviceId, shop: { tenant: params.tenant } },
+			where: { deviceId: params.deviceId },
 			relations: { shop: true, cart: true }
 		});
 		if (!device) {
 			device = await this.create(params);
+		} else {
+			const shop = await this.shopRepository.findOne({ where: { tenant: params.tenant } });
+			if (shop) {
+				device.shop = shop;
+				await device.save();
+			}
 		}
 		return device;
 	}
