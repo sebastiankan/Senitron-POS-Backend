@@ -13,7 +13,7 @@ export class DeviceController {
 	@Post("/")
 	@Summary("Create a new Device and link to a shop and cart")
 	@Returns(201, Device)
-	async create(@BodyParams() data: Partial<Device> & { tenant: string }): Promise<Device> {
+	async create(@BodyParams() data: Partial<Device> & { tenant: string; deviceName: string }): Promise<Device> {
 		return this.deviceService.create(data);
 	}
 

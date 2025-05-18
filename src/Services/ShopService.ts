@@ -58,7 +58,7 @@ export class ShopService {
 		return await this.shopRepository.save(shop);
 	}
 
-	async registerDevice(params: { deviceId: string; tenant: string }) {
+	async registerDevice(params: { deviceId: string; deviceName: string; tenant: string }) {
 		const shop = await this.shopRepository.findOne({ where: { tenant: params.tenant }, relations: { devices: true } });
 		if (!shop) throw new BadRequest("Shop not found");
 		const deviceRegistedredInShop = (shop.devices || []).map((e) => e.deviceId).includes(params.deviceId);
@@ -70,7 +70,7 @@ export class ShopService {
 		return shop;
 	}
 
-	async auth(params: { tenant: string; apiKey: string; pairDigits: number }): Promise<string> {
+	async auth(params: { tenant: string; deviceName: string; apiKey: string; pairDigits: number }): Promise<string> {
 		const posDeviceId = await this.pairKeyService.getPosDeviceIdByDigits(params.pairDigits);
 		if (!posDeviceId) throw new BadRequest("Pair key not found");
 		await this.getOrCreate(params);

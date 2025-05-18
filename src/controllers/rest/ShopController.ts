@@ -15,12 +15,12 @@ export class ShopController {
 
 	// Returns POS-Extension device ID
 	@Post("/auth")
-	async auth(@BodyParams() params: { tenant?: string; apiKey?: string; pairDigits?: number }): Promise<string> {
-		const { tenant, apiKey, pairDigits } = params || {};
-		if (!tenant || !apiKey || pairDigits === undefined || pairDigits === null) {
+	async auth(@BodyParams() params: { tenant?: string; deviceName?: string; apiKey?: string; pairDigits?: number }): Promise<string> {
+		const { tenant, deviceName, apiKey, pairDigits } = params || {};
+		if (!tenant || !deviceName || !apiKey || pairDigits === undefined || pairDigits === null) {
 			throw new Error("Missing required parameters: tenant, apiKey, pairDigits");
 		}
-		return await this.shopService.auth({ tenant, apiKey, pairDigits });
+		return await this.shopService.auth({ tenant, deviceName, apiKey, pairDigits });
 	}
 
 	@Put("/")

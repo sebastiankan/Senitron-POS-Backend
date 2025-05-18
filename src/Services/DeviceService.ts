@@ -29,7 +29,7 @@ export class DeviceService {
 		this.cartRepository = this.dataSource.getRepository(Cart);
 	}
 
-	async create(data: Partial<Device> & { tenant: string }): Promise<Device> {
+	async create(data: Partial<Device> & { tenant: string; deviceName: string }): Promise<Device> {
 		const shop = await this.shopRepository.findOneBy({ tenant: data.tenant });
 		if (!shop) throw new NotFound("Shop not found");
 
@@ -38,6 +38,7 @@ export class DeviceService {
 
 		const device = this.deviceRepo.create({
 			...data,
+			name: data.deviceName,
 			shop,
 			cart
 		});
@@ -65,7 +66,7 @@ export class DeviceService {
 		return device;
 	}
 
-	async findOrCreateByDeviceId(params: { deviceId: string; tenant: string }): Promise<Device> {
+	async findOrCreateByDeviceId(params: { deviceId: string; deviceName: string; tenant: string }): Promise<Device> {
 		let device = await this.deviceRepo.findOne({
 			where: { deviceId: params.deviceId },
 			relations: { shop: true, cart: true }
@@ -76,6 +77,7 @@ export class DeviceService {
 			const shop = await this.shopRepository.findOne({ where: { tenant: params.tenant } });
 			if (shop) {
 				device.shop = shop;
+				device.name = params.deviceName;
 				await device.save();
 			}
 		}
