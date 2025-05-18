@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-import { Device } from "./DeviceId.js";
+import { Device } from "./Device.js";
 
 @Entity()
 export class Shop extends BaseEntity {

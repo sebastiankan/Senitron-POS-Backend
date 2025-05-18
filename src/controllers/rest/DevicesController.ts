@@ -3,7 +3,7 @@ import { BodyParams, HeaderParams, QueryParams } from "@tsed/platform-params";
 import { Delete, Get, Patch, Post, Put, Returns, Summary } from "@tsed/schema";
 import { ScanMode } from "src/enums/ScanMode.js";
 import { Cart } from "src/models/Cart.js";
-import { Device } from "src/models/DeviceId.js";
+import { Device } from "src/models/Device.js";
 import { DeviceService } from "src/Services/DeviceService.js";
 
 @Controller("/devices")

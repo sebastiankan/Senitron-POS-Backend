@@ -3,7 +3,7 @@ import { NotFound } from "@tsed/exceptions";
 import { MYSQL_DATA_SOURCE } from "src/config/DataSources/MysqlDatasource.js";
 import { ScanMode } from "src/enums/ScanMode.js";
 import { Cart } from "src/models/Cart.js";
-import { Device } from "src/models/DeviceId.js";
+import { Device } from "src/models/Device.js";
 import { Shop } from "src/models/Shop.js";
 import { DataSource, Repository } from "typeorm";
 
