@@ -62,10 +62,16 @@ export class ShopService {
 		const shop = await this.shopRepository.findOne({ where: { tenant: params.tenant }, relations: { devices: true } });
 		if (!shop) throw new BadRequest("Shop not found");
 		const deviceRegistedredInShop = (shop.devices || []).map((e) => e.deviceId).includes(params.deviceId);
+		const device = await this.deviceService.findOrCreateByDeviceId(params);
 		if (!deviceRegistedredInShop) {
-			const device = await this.deviceService.findOrCreateByDeviceId(params);
+			console.log(`Device ${device.deviceId} DeviceName: ${device.name} register request in shop ${shop.tenant}`);
 			shop.devices.push(device);
 			await shop.save();
+		} else {
+			console.log(
+				`Device ${params.deviceId} DeviceName: ${params.deviceName} already registered in shop ${shop.tenant}. Updating Device Name.`
+			);
+			device.name = params.deviceName;
 		}
 		return shop;
 	}
